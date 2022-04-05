@@ -8,30 +8,35 @@ import {
   Post
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
-
+import { CreateCourseDto } from './dto/create-course.dto';
+import { UpdateCourseDto } from './dto/update-course.dto';
+import { Course } from './entities/course.entity';
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly courseService: CoursesService) {}
 
   @Get()
-  findAll(): any {
+  findAll(): Promise<Course[]> {
     return this.courseService.findAll();
   }
   @Get(':id')
-  findOne(@Param('id') id: number): any {
-    return this.courseService.findOne(Number(id));
+  findOne(@Param('id') id: string): Promise<Course> {
+    return this.courseService.findOne(id);
   }
   @Post()
-  create(@Body() body: any): any {
-    return this.courseService.create(body);
+  create(@Body() CreateCourseDto: CreateCourseDto): Promise<Course> {
+    return this.courseService.create(CreateCourseDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() body: any): any {
-    return this.courseService.update(Number(id), body);
+  update(
+    @Param('id') id: string,
+    @Body() updateCourseDto: UpdateCourseDto,
+  ): Promise<Course> {
+    return this.courseService.update(id, updateCourseDto);
   }
   @Delete(':id')
-  remove(@Param('id') id: number): any {
-    return this.courseService.remove(Number(id));
+  remove(@Param('id') id: string): Promise<Course> {
+    return this.courseService.remove(id);
   }
 }
